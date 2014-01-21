@@ -1,0 +1,5 @@
+# git ignore file
+*.suo
+*.user
+[Bb]in/
+[Oo]bj/
