@@ -59,6 +59,7 @@
     <Compile Include="Model\ProcessInfo.cs" />
     <Compile Include="Model\ProcessPriority.cs" />
     <Compile Include="Model\ProcessThreadInfo.cs" />
+    <Compile Include="ValueConverters\ProcessDurationConverter.cs" />
     <Compile Include="ViewModels\ProcessesViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Page Include="MainWindow.xaml">
@@ -98,6 +99,7 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

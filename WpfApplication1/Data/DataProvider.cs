@@ -15,7 +15,7 @@ namespace WpfApplication1.Data
 
     class DataProvider : IDataProvider
     {
-
+       
         public IList<ProcessInfo> GetProcesses()
         {
             var list = System.Diagnostics.Process.GetProcesses().Select(p => GetProcessInfo(p));
@@ -26,16 +26,25 @@ namespace WpfApplication1.Data
         private ProcessInfo GetProcessInfo(Diag.Process process)
         {
             if (process == null) throw new ArgumentNullException("process");
-
-            return new ProcessInfo()
-          {
-              ProcessID = process.Id,
-              ProcessName = process.ProcessName,
-              StartTime = process.StartTime,
-              PrivateMemorySize = process.PrivateMemorySize,
-              Priority = GetProcessPriority(process.PriorityClass),
-              Threads = GetThreads(process.Threads)
-          };
+          
+            try
+            {
+                return new ProcessInfo()
+                {
+                    ProcessID = process.Id,
+                    ProcessName = process.ProcessName,
+                    StartTime = process.StartTime,
+                    PrivateMemorySize = process.PrivateMemorySize,
+                    Priority = GetProcessPriority(process.PriorityClass),
+                      Threads = GetThreads(process.Threads)
+                };
+            }
+            catch (Exception e)
+            {
+                Diag.Debug.WriteLine("ERROR getting process: {0} on {1}",e.Message,  process.ProcessName );
+                return null;
+            }
+          
 
         }
 
@@ -48,20 +57,29 @@ namespace WpfApplication1.Data
 
         ProcessThreadInfo GetProcessThreadInfo(Diag.ProcessThread thread)
         {
-            if (thread == null) throw new ArgumentNullException("thread");
-
-            return new ProcessThreadInfo
+             if (thread == null) throw new ArgumentNullException("thread");
+            try
             {
-                Id = thread.Id,
-                CurrentPriority = thread.CurrentPriority,
-                StartTime = thread.StartTime
-            };
+               
+                    return new ProcessThreadInfo
+                    {
+                        Id = thread.Id,
+                        CurrentPriority = thread.CurrentPriority,
+                        StartTime = thread.StartTime
+                    };
+                
+            }
+            catch (Exception ex)
+            {
+                Diag.Debug.WriteLine("ERROR getting thread: {0}  ", ex.Message);
+                return null;
+            }
+            
         }
 
         private ProcessPriority GetProcessPriority(Diag.ProcessPriorityClass priorityClass)
         {
-            if (priorityClass == null) throw new ArgumentNullException("priorityClass");
-
+           // if (priorityClass == null) throw new ArgumentNullException("priorityClass");
 
             switch (priorityClass)
             {
@@ -69,6 +87,8 @@ namespace WpfApplication1.Data
                     return ProcessPriority.AboveNormal;
                 case Diag.ProcessPriorityClass.BelowNormal:
                     return ProcessPriority.BelowNormal;
+                case Diag.ProcessPriorityClass.Normal:
+                    return ProcessPriority.Normal;
                 case Diag.ProcessPriorityClass.High:
                     return ProcessPriority.High;
                 case Diag.ProcessPriorityClass.Idle:
